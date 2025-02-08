@@ -1,20 +1,19 @@
 package org.example.app
 
+import org.jetbrains.kotlin.scripting.ide_services.compiler.KJvmReplCompilerWithIdeServices
 import org.jline.console.ScriptEngine
-import org.jline.reader.Binding
 import org.jline.reader.Completer
 import java.io.File
 import java.nio.file.Path
-import kotlin.script.experimental.api.ScriptEvaluationConfiguration
 import kotlin.script.experimental.host.StringScriptSource
 import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
-import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromTemplate
 
 class KotlinScriptEngine : ScriptEngine {
 
     val host: BasicJvmScriptingHost
 
     init {
+        // Create a new scripting host
         host = BasicJvmScriptingHost()
     }
 
@@ -28,6 +27,8 @@ class KotlinScriptEngine : ScriptEngine {
 
     override fun getScriptCompleter(): Completer? {
         TODO("Not yet implemented")
+        // TODO: use kotlin scripting IDE services
+        KJvmReplCompilerWithIdeServices()
     }
 
     override fun hasVariable(p0: String?): Boolean {
@@ -92,7 +93,7 @@ class KotlinScriptEngine : ScriptEngine {
 
         val source = StringScriptSource(stmt)
 
-        val resultWith = host.eval(source, SnippetScriptConfiguration, null)
+        val resultWith = host.eval(source, DefaultScriptConfiguration, null)
         println(resultWith)
 
         return null

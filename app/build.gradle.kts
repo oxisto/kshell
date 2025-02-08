@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.kotlin.scripting.jvm)
     implementation(libs.kotlin.scripting.jvm.host)
     implementation(libs.kotlin.scripting.common)
+    implementation(libs.kotlin.scripting.ide.services)
 }
 
 application {

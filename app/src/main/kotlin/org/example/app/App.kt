@@ -21,9 +21,11 @@ import java.util.function.Supplier
 
 val version = "0.0.0"
 
-class KotlinShellRegistry(parser: Parser, terminal: Terminal, workDir: Supplier<Path>, configPath: ConfigurationPath) : SystemRegistryImpl(parser, terminal, workDir, configPath) {
-
-}
+class KotlinShellRegistry(parser: Parser,
+                          terminal: Terminal,
+                          workDir: Supplier<Path>,
+                          configPath: ConfigurationPath,
+    ) : SystemRegistryImpl(parser, terminal, workDir, configPath)
 
 fun main() {
     val parser = DefaultParser()
@@ -42,12 +44,9 @@ fun main() {
 
     val printer = DefaultPrinter(scriptEngine, configPath)
     val console = ConsoleEngineImpl(scriptEngine, printer, workDir, configPath);
-    val builtins = Builtins(
-        workDir, configPath
-    ) { `fun`: String? -> WidgetCreator(console, `fun`) }
 
     val registry = KotlinShellRegistry(parser, terminal, workDir, configPath)
-    registry.setCommandRegistries(console, builtins);
+    registry.setCommandRegistries(console);
 
     val reader = LineReaderBuilder.builder()
         .terminal(terminal)
@@ -56,7 +55,6 @@ fun main() {
         .build()
 
     console.setLineReader(reader)
-    builtins.setLineReader(reader)
 
     println(terminal.name + ": version $version")
 
