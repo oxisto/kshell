@@ -5,19 +5,16 @@ package org.example.app
 
 import org.jline.builtins.ConfigurationPath
 import org.jline.console.ConsoleEngine.WidgetCreator
-import org.jline.console.ScriptEngine
 import org.jline.console.impl.Builtins
 import org.jline.console.impl.ConsoleEngineImpl
 import org.jline.console.impl.DefaultPrinter
 import org.jline.console.impl.SystemRegistryImpl
-import org.jline.reader.Completer
 import org.jline.reader.LineReaderBuilder
 import org.jline.reader.Parser
 import org.jline.reader.impl.DefaultParser
 import org.jline.terminal.Terminal
 import org.jline.terminal.Terminal.Signal
 import org.jline.terminal.TerminalBuilder
-import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.function.Supplier
@@ -28,92 +25,8 @@ class KotlinShellRegistry(parser: Parser, terminal: Terminal, workDir: Supplier<
 
 }
 
-class KotlinScriptEngine : ScriptEngine {
-    override fun getEngineName(): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getExtensions(): Collection<String?>? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getScriptCompleter(): Completer? {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasVariable(p0: String?): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun put(p0: String?, p1: Any?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun get(p0: String?): Any? {
-        TODO("Not yet implemented")
-    }
-
-    override fun find(p0: String?): Map<String?, Any?>? {
-        TODO("Not yet implemented")
-    }
-
-    override fun del(vararg p0: String?) {
-        // TODO
-    }
-
-    override fun toJson(p0: Any?): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun toString(p0: Any?): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun toMap(p0: Any?): Map<String?, Any?>? {
-        TODO("Not yet implemented")
-    }
-
-    override fun deserialize(value: String?, format: String?): Any? {
-        if(format == "json") {
-            return mapOf<String, Any?>()
-        } else {
-            return value
-        }
-    }
-
-    override fun getSerializationFormats(): List<String> {
-        return listOf("json", "none")
-    }
-
-    override fun getDeserializationFormats(): List<String?>? {
-        return listOf("json", "kotlin", "none")
-    }
-
-    override fun persist(p0: Path?, p1: Any?) {
-
-    }
-
-    override fun persist(p0: Path?, p1: Any?, p2: String?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun execute(p0: String?): Any? {
-        TODO("Not yet implemented")
-    }
-
-    override fun execute(p0: File?, p1: Array<out Any?>?): Any? {
-        TODO("Not yet implemented")
-    }
-
-    override fun execute(p0: Any?, vararg p1: Any?): Any? {
-        TODO("Not yet implemented")
-    }
-
-}
-
 fun main() {
-
-    val parser: DefaultParser = DefaultParser()
+    val parser = DefaultParser()
 
     val terminal = TerminalBuilder.builder().name("kshell")
         .build()
@@ -142,12 +55,16 @@ fun main() {
         .parser(parser)
         .build()
 
+    console.setLineReader(reader)
+    builtins.setLineReader(reader)
+
     println(terminal.name + ": version $version")
 
     while (true) {
         try {
             registry.cleanUp()
             var line = reader.readLine("kshell> ")
+            println("Reading $line")
             val result = registry.execute(line)
             console.println(result)
         } catch (e: java.lang.Exception) {

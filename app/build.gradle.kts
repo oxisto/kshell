@@ -10,6 +10,9 @@ plugins {
 
 dependencies {
     implementation(libs.jline)
+    implementation(libs.kotlin.scripting.jvm)
+    implementation(libs.kotlin.scripting.jvm.host)
+    implementation(libs.kotlin.scripting.common)
 }
 
 application {
