@@ -9,8 +9,10 @@ import org.jline.console.impl.Builtins
 import org.jline.console.impl.ConsoleEngineImpl
 import org.jline.console.impl.DefaultPrinter
 import org.jline.console.impl.SystemRegistryImpl
+import org.jline.reader.EndOfFileException
 import org.jline.reader.LineReaderBuilder
 import org.jline.reader.Parser
+import org.jline.reader.UserInterruptException
 import org.jline.reader.impl.DefaultParser
 import org.jline.terminal.Terminal
 import org.jline.terminal.Terminal.Signal
@@ -65,9 +67,12 @@ fun main() {
             println("Reading $line")
             val result = registry.execute(line)
             console.println(result)
-        } catch (e: java.lang.Exception) {
+        } catch(_: UserInterruptException) {
             // Ignore
-            e.printStackTrace()
+        } catch (_: EndOfFileException) {
+            break
+        } catch (e: Exception) {
+            registry.trace(e)
         }
     }
 
